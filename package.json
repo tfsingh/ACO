@@ -1,5 +1,5 @@
 {
-  "name": "client",
+  "name": "cuda-online",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -9,19 +9,22 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@monaco-editor/react": "^4.6.0",
+    "@zeit/next-css": "^1.0.1",
+    "monaco-editor": "^0.44.0",
+    "next": "13.5.4",
     "react": "^18",
-    "react-dom": "^18",
-    "next": "13.5.4"
+    "react-dom": "^18"
   },
   "devDependencies": {
-    "typescript": "^5",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "autoprefixer": "^10",
+    "eslint": "^8",
+    "eslint-config-next": "13.5.4",
     "postcss": "^8",
     "tailwindcss": "^3",
-    "eslint": "^8",
-    "eslint-config-next": "13.5.4"
+    "typescript": "^5"
   }
 }
