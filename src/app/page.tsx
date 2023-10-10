@@ -1,6 +1,7 @@
 "use client";
 
 import Editor, { Monaco } from "@monaco-editor/react";
+import React, { useRef, useState } from 'react';
 
 const cudaCode = `// Here's some CUDA to get you started!
 #include <iostream>
@@ -67,32 +68,45 @@ int main() {
 }
 `;
 
-const result = "[0, 3, 6, 9, 12]";
-
 const App = () => {
+  const [result, setResult] = useState<string>("[0, 3, 6, 9, 12]");
+  const editorRef = useRef<any>(null);
+
+  function handleEditorDidMount(editor : any, monaco : any) {
+    editorRef.current = editor;
+  }
+
+  function sendKernel() {
+    if (editorRef.current == null) {
+      return;
+    }
+
+    let executionResult = editorRef.current.getValue();
+    
+    setResult(executionResult);
+  }
 
   return (
     <div className="flex flex-row">
       <div className="w-32px">
-      <Editor
-        height="100vh"
-        width="70vw"
-        defaultLanguage="cpp"
-        defaultValue={cudaCode}
-        theme="vs-dark"
-      ></Editor>
+        <Editor
+          height="100vh"
+          width="70vw"
+          defaultLanguage="cpp"
+          defaultValue={cudaCode}
+          theme="vs-dark"
+          onMount={handleEditorDidMount}
+        ></Editor>
       </div>
       
-  
       <div className="flex flex-col w-full">
-        <button className="bg-blue-500 text-white text-lg py-1 px-4">
+        <button className="bg-blue-500 text-white text-lg py-1 px-4" onClick={sendKernel}>
           Execute Kernel
         </button> 
-        <p className="text-sm text-zinc-300 pt-1 float-right font-mono">&gt;&gt; {result}</p>
+        <pre className="text-sm text-zinc-300 pt-1 float-right font-mono" style={{ whiteSpace: "pre-wrap" }}>&gt;&gt; {result}</pre>
       </div>
     </div>
   );
-  
 }
 
 export default App;
