@@ -2,19 +2,12 @@
 
 import Editor, { Monaco } from "@monaco-editor/react";
 import React, { useRef, useState, useEffect } from 'react';
-
-const defaultCuda = `// Here's some CUDA to get you started!
-// ... (your CUDA code)
-`;
-
-const defaultTriton = `# Here's some Python code for Triton
-# ... (your Python code)
-`;
+import { defaultCuda, defaultTriton, defaultLanguage, defaultResult } from "./constants";
 
 const App = () => {
   const [selectedLanguage, setselectedLanguage] = useState<string>(() => {
     const storedLanguage = localStorage.getItem('selectedLanguage');
-    return storedLanguage || "cuda";
+    return storedLanguage || defaultLanguage;
   });
 
   const [cudaCode, setCudaCode] = useState<string | undefined>(() => {
@@ -26,9 +19,14 @@ const App = () => {
     return storedTritonCode || defaultTriton;
   });
 
-  const [cudaResult, setCudaResult] = useState<string>(">> [0, 3, 6, 9, 12]");
-  const [tritonResult, setTritonResult] = useState<string>(">> [0, 3, 6, 9, 12]");
-
+  const [cudaResult, setCudaResult] = useState<string>(() => {
+    const storedCudaResult = localStorage.getItem('cudaResult');
+    return storedCudaResult || defaultResult;
+  });
+  const [tritonResult, setTritonResult] = useState<string>(() => {
+    const storedTritonResult = localStorage.getItem('tritonResult');
+    return storedTritonResult || defaultResult;
+  });
   const editorRef = useRef<any>(null);
 
   function handleEditorDidMount(editor: any, monaco: any) {
@@ -38,11 +36,13 @@ const App = () => {
   useEffect(() => {
     if (selectedLanguage === "cuda") {
       localStorage.setItem('cudaCode', cudaCode || '');
+      localStorage.setItem('cudaResult', cudaResult);
     } else if (selectedLanguage === "triton") {
       localStorage.setItem('tritonCode', tritonCode || '');
+      localStorage.setItem('tritonResult', tritonResult);
     }
     localStorage.setItem('selectedLanguage', selectedLanguage);
-  }, [cudaCode, tritonCode, selectedLanguage]);
+  }, [cudaCode, cudaResult, tritonCode, tritonResult, selectedLanguage]);
 
   function sendCuda() {
     if (editorRef.current == null) {
@@ -72,7 +72,7 @@ const App = () => {
           <Editor
             height="100vh"
             width="70vw"
-            defaultLanguage="cpp"
+            language="cpp"
             value={cudaCode}
             theme="vs-dark"
             onMount={handleEditorDidMount}
@@ -84,7 +84,7 @@ const App = () => {
           <Editor
             height="100vh"
             width="70vw"
-            defaultLanguage="python"
+            language="python"
             value={tritonCode}
             theme="vs-dark"
             onMount={handleEditorDidMount}
