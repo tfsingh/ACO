@@ -1,9 +1,9 @@
 "use client";
 
 import Editor, { Monaco } from "@monaco-editor/react";
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 
-const cudaCode = `// Here's some CUDA to get you started!
+const defaultCuda = `// Here's some CUDA to get you started!
 #include <iostream>
 #include <cstdlib>
 
@@ -69,12 +69,21 @@ int main() {
 `;
 
 const App = () => {
+  const [cudaCode, setCudaCode] = useState<string | undefined>(() => {
+    const storedCudaCode = localStorage.getItem('cudaCode');
+    return storedCudaCode || defaultCuda;
+  });
+
   const [result, setResult] = useState<string>("[0, 3, 6, 9, 12]");
   const editorRef = useRef<any>(null);
 
-  function handleEditorDidMount(editor : any, monaco : any) {
+  function handleEditorDidMount(editor: any, monaco: any) {
     editorRef.current = editor;
   }
+
+  useEffect(() => {
+    localStorage.setItem('cudaCode', cudaCode || '');
+  }, [cudaCode]);
 
   function sendKernel() {
     if (editorRef.current == null) {
@@ -93,9 +102,10 @@ const App = () => {
           height="100vh"
           width="70vw"
           defaultLanguage="cpp"
-          defaultValue={cudaCode}
+          value={cudaCode} 
           theme="vs-dark"
           onMount={handleEditorDidMount}
+          onChange={(newCudaCode : string | undefined) => setCudaCode(newCudaCode)} 
         ></Editor>
       </div>
       
