@@ -99,11 +99,11 @@ const App = () => {
         ></Editor>
       </div>
       
-      <div className="flex flex-col w-full">
+      <div className="flex flex-col w-screen h-screen">
         <button className="bg-blue-500 text-white text-lg py-1 px-4" onClick={sendKernel}>
           Execute Kernel
         </button> 
-        <pre className="text-sm text-zinc-300 pt-1 float-right font-mono" style={{ whiteSpace: "pre-wrap" }}>&gt;&gt; {result}</pre>
+        <pre className="text-sm text-zinc-300 pt-1 float-right font-mono overflow-y-auto" style={{ whiteSpace: "pre-wrap" }}>&gt;&gt; {result}</pre>
       </div>
     </div>
   );
