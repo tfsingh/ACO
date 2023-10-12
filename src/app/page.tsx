@@ -67,32 +67,37 @@ const App = () => {
 
   return (
     <div className="flex flex-row">
-      <div>
-      {selectedLanguage === "cuda" ? (
-          <Editor
-            height="100vh"
-            width="70vw"
-            language="cpp"
-            value={cudaCode}
-            theme="vs-dark"
-            onMount={handleEditorDidMount}
-            onChange={(newCudaCode: string | undefined) =>
-              setCudaCode(newCudaCode)
-            }
-          ></Editor>
-        ) : (
-          <Editor
-            height="100vh"
-            width="70vw"
-            language="python"
-            value={tritonCode}
-            theme="vs-dark"
-            onMount={handleEditorDidMount}
-            onChange={(newTritonCode: string | undefined) =>
-              setTritonCode(newTritonCode)
-            }
-          ></Editor>
-        )}
+      <div className="flex flex-col">
+        <div className="w-full bg-gray-500 text-white text-lg py-1 px-4 w-1/2 rounded">
+          Accelerated Computing, Online
+        </div>
+        <div>
+          {selectedLanguage === "cuda" ? (
+              <Editor
+                height="100vh"
+                width="70vw"
+                language="cpp"
+                value={cudaCode}
+                theme="vs-dark"
+                onMount={handleEditorDidMount}
+                onChange={(newCudaCode: string | undefined) =>
+                  setCudaCode(newCudaCode)
+                }
+              ></Editor>
+            ) : (
+              <Editor
+                height="100vh"
+                width="70vw"
+                language="python"
+                value={tritonCode}
+                theme="vs-dark"
+                onMount={handleEditorDidMount}
+                onChange={(newTritonCode: string | undefined) =>
+                  setTritonCode(newTritonCode)
+                }
+              ></Editor>
+            )}
+        </div>
       </div>
       <div className="flex flex-col w-screen h-screen">
         <div className="flex flex-row">

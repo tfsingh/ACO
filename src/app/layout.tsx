@@ -5,8 +5,8 @@ import { Inter } from 'next/font/google'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'Cuda Online',
-  description: 'Execute CUDA code in your browser',
+  title: 'ACO',
+  description: 'Accelerated Computing, Online',
 }
 
 export default function RootLayout({
