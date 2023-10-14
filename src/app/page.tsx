@@ -69,7 +69,7 @@ const App = () => {
     <div className="flex flex-row">
       <div className="flex flex-col">
         <div className="w-full bg-gray-500 text-white text-lg py-1 px-4 w-1/2 rounded">
-          Accelerated Computing, Online
+          Accelerated Computing, Online — add oauth
         </div>
         <div>
           {selectedLanguage === "cuda" ? (
