@@ -3,8 +3,9 @@
 import Editor, { Monaco } from "@monaco-editor/react";
 import React, { useRef, useState, useEffect } from 'react';
 import { defaultCuda, defaultTriton, defaultLanguage, defaultResult } from "./constants";
+import Login from "./Login";
 
-const App = () => {
+export default function App(){
   const [selectedLanguage, setselectedLanguage] = useState<string>(() => {
     const storedLanguage = localStorage.getItem('selectedLanguage');
     return storedLanguage || defaultLanguage;
@@ -67,10 +68,15 @@ const App = () => {
 
   return (
     <div className="flex flex-row">
+    
       <div className="flex flex-col">
-        <div className="w-full bg-gray-500 text-white text-lg py-1 px-4 w-1/2 rounded">
-          Accelerated Computing, Online — add oauth
+        <div className="flex flex-row">
+        <div className="w-full bg-black-500 text-white text-lg py-1 px-4 ">
+          Accelerated Computing, Online
         </div>
+        <Login></Login>
+        </div>
+       
         <div>
           {selectedLanguage === "cuda" ? (
               <Editor
@@ -125,5 +131,3 @@ const App = () => {
     </div>
   );
 }
-
-export default App;
