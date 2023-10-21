@@ -5,7 +5,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import { defaultCuda, defaultTriton, defaultLanguage, defaultResult } from "./constants";
 import Login from "./Login";
 
-export default function App(){
+export default function App() {
   const [selectedLanguage, setselectedLanguage] = useState<string>(() => {
     const storedLanguage = localStorage.getItem('selectedLanguage');
     return storedLanguage || defaultLanguage;
@@ -68,41 +68,40 @@ export default function App(){
 
   return (
     <div className="flex flex-row">
-    
       <div className="flex flex-col">
         <div className="flex flex-row">
-        <div className="w-full bg-black-500 text-white text-lg py-1 px-4 ">
-          Accelerated Computing, Online
+          <div className="w-full bg-black-500 text-white text-lg py-1 px-4 ">
+            Accelerated Computing, Online
+          </div>
+          <Login></Login>
         </div>
-        <Login></Login>
-        </div>
-       
+
         <div>
           {selectedLanguage === "cuda" ? (
-              <Editor
-                height="100vh"
-                width="70vw"
-                language="cpp"
-                value={cudaCode}
-                theme="vs-dark"
-                onMount={handleEditorDidMount}
-                onChange={(newCudaCode: string | undefined) =>
-                  setCudaCode(newCudaCode)
-                }
-              ></Editor>
-            ) : (
-              <Editor
-                height="100vh"
-                width="70vw"
-                language="python"
-                value={tritonCode}
-                theme="vs-dark"
-                onMount={handleEditorDidMount}
-                onChange={(newTritonCode: string | undefined) =>
-                  setTritonCode(newTritonCode)
-                }
-              ></Editor>
-            )}
+            <Editor
+              height="100vh"
+              width="70vw"
+              language="cpp"
+              value={cudaCode}
+              theme="vs-dark"
+              onMount={handleEditorDidMount}
+              onChange={(newCudaCode: string | undefined) =>
+                setCudaCode(newCudaCode)
+              }
+            ></Editor>
+          ) : (
+            <Editor
+              height="100vh"
+              width="70vw"
+              language="python"
+              value={tritonCode}
+              theme="vs-dark"
+              onMount={handleEditorDidMount}
+              onChange={(newTritonCode: string | undefined) =>
+                setTritonCode(newTritonCode)
+              }
+            ></Editor>
+          )}
         </div>
       </div>
       <div className="flex flex-col w-screen h-screen">
@@ -127,7 +126,7 @@ export default function App(){
         >
           {result}
         </pre>
-      </div>   
+      </div>
     </div>
   );
 }

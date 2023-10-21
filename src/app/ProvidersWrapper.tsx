@@ -8,7 +8,7 @@ export default function ProvidersWrapper({
 }) {
   return (
     <SessionProvider>
-        {children}
+      {children}
     </SessionProvider>
   )
 }
