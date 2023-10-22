@@ -1,11 +1,12 @@
 "use client";
-
-import Editor, { Monaco } from "@monaco-editor/react";
+import Editor from "@monaco-editor/react";
 import React, { useRef, useState, useEffect } from 'react';
 import { defaultCuda, defaultTriton, defaultLanguage, defaultResult } from "./constants";
-import Login from "./Login";
+import { useSession, signIn, signOut } from "next-auth/react";
 
 export default function App() {
+  const { data: session } = useSession();
+
   const [selectedLanguage, setselectedLanguage] = useState<string>(() => {
     const storedLanguage = localStorage.getItem('selectedLanguage');
     return storedLanguage || defaultLanguage;
@@ -13,21 +14,24 @@ export default function App() {
 
   const [cudaCode, setCudaCode] = useState<string | undefined>(() => {
     const storedCudaCode = localStorage.getItem('cudaCode');
-    return storedCudaCode || defaultCuda;
+    return storedCudaCode === '__empty__' ? '' : storedCudaCode || defaultCuda;
   });
+
   const [tritonCode, setTritonCode] = useState<string | undefined>(() => {
     const storedTritonCode = localStorage.getItem('tritonCode');
-    return storedTritonCode || defaultTriton;
+    return storedTritonCode === '__empty__' ? '' : storedTritonCode || defaultTriton;
   });
 
   const [cudaResult, setCudaResult] = useState<string>(() => {
     const storedCudaResult = localStorage.getItem('cudaResult');
-    return storedCudaResult || defaultResult;
+    return storedCudaResult === '__empty__' ? '' : storedCudaResult || defaultResult;
   });
+
   const [tritonResult, setTritonResult] = useState<string>(() => {
     const storedTritonResult = localStorage.getItem('tritonResult');
-    return storedTritonResult || defaultResult;
+    return storedTritonResult === '__empty__' ? '' : storedTritonResult || defaultResult;
   });
+
   const editorRef = useRef<any>(null);
 
   function handleEditorDidMount(editor: any, monaco: any) {
@@ -36,11 +40,11 @@ export default function App() {
 
   useEffect(() => {
     if (selectedLanguage === "cuda") {
-      localStorage.setItem('cudaCode', cudaCode || '');
-      localStorage.setItem('cudaResult', cudaResult);
+      localStorage.setItem('cudaCode', cudaCode === '' ? '__empty__' : cudaCode || '');
+      localStorage.setItem('cudaResult', cudaResult === '' ? '__empty__' : cudaResult);
     } else if (selectedLanguage === "triton") {
-      localStorage.setItem('tritonCode', tritonCode || '');
-      localStorage.setItem('tritonResult', tritonResult);
+      localStorage.setItem('tritonCode', tritonCode === '' ? '__empty__' : tritonCode || '');
+      localStorage.setItem('tritonResult', tritonResult === '' ? '__empty__' : tritonResult);
     }
     localStorage.setItem('selectedLanguage', selectedLanguage);
   }, [cudaCode, cudaResult, tritonCode, tritonResult, selectedLanguage]);
@@ -65,15 +69,13 @@ export default function App() {
 
   const result = selectedLanguage === "cuda" ? cudaResult : tritonResult;
   const sendFunction = selectedLanguage === "cuda" ? sendCuda : sendTriton;
-
   return (
     <div className="flex flex-row">
       <div className="flex flex-col">
         <div className="flex flex-row">
-          <div className="w-full bg-black-500 text-white text-lg py-1 px-4 ">
+          <div className="w-full bg-black-500 text-white text-lg py-1 px-4">
             Accelerated Computing, Online
           </div>
-          <Login></Login>
         </div>
 
         <div>
@@ -88,7 +90,7 @@ export default function App() {
               onChange={(newCudaCode: string | undefined) =>
                 setCudaCode(newCudaCode)
               }
-            ></Editor>
+            />
           ) : (
             <Editor
               height="100vh"
@@ -100,26 +102,45 @@ export default function App() {
               onChange={(newTritonCode: string | undefined) =>
                 setTritonCode(newTritonCode)
               }
-            ></Editor>
+            />
           )}
         </div>
       </div>
+
       <div className="flex flex-col w-screen h-screen">
-        <div className="flex flex-row">
-          <select
-            className="bg-green-500 text-white text-lg py-1 px-4 w-1/2 rounded"
-            onChange={(e) => setselectedLanguage(e.target.value)}
-            value={selectedLanguage}>
-            <option value="cuda">CUDA</option>
-            <option value="triton">Triton</option>
-          </select>
+        {!session?.user?.name ? (
           <button
-            className="bg-blue-500 text-left text-white text-lg py-1 px-4 w-1/2 rounded"
-            onClick={sendFunction}
+            onClick={() => signIn()}
+            type="button"
+            className="btn btn-primary w-full bg-emerald-500 text-white text-lg py-1 px-4 sm:text-base"
           >
-            Execute Kernel
+            Sign In
           </button>
-        </div>
+        ) : (
+          <div className="flex flex-row">
+            <select
+              className="bg-emerald-500 text-white text-lg py-1 px-4 w-1/3 sm:text-base"
+              onChange={(e) => setselectedLanguage(e.target.value)}
+              value={selectedLanguage}
+            >
+              <option value="cuda">CUDA</option>
+              <option value="triton">Triton</option>
+            </select>
+            <button
+              className="bg-blue-500 text-left text-white text-lg py-1 px-4 w-1/3 sm:text-base"
+              onClick={sendFunction}
+            >
+              Execute Kernel
+            </button>
+            <button
+              onClick={() => signOut()}
+              type="button"
+              className="btn btn-primary w-1/3 bg-red-500 text-white text-lg py-1 px-4 sm:text-base"
+            >
+              Sign Out
+            </button>
+          </div>
+        )}
         <pre
           className="text-sm text-zinc-300 pt-1 float-right font-mono overflow-y-auto"
           style={{ whiteSpace: "pre-wrap" }}
@@ -127,6 +148,5 @@ export default function App() {
           {result}
         </pre>
       </div>
-    </div>
-  );
-}
+    </div>)
+};
