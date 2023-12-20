@@ -1,4 +1,9 @@
-export const defaultCuda = `// Here's some CUDA to get you started!
+export const defaultCuda = `
+// We're working on CUDA support, primarily trying to figure out a better sandbox
+// alternative than Docker on static ec2 instances — if you have any thoughts on this,
+// please send them to tejfsingh@gmail.com!`
+
+export const defaultCudaWhenReady = `// Here's some CUDA to get you started!
 #include <iostream>
 #include <cstdlib>
 
@@ -124,9 +129,11 @@ print(output_triton)
 print(f'The maximum difference between torch and triton is '
       f'{torch.max(torch.abs(output_torch - output_triton))}')`
 
-export const defaultLanguage = "cuda";
+export const defaultLanguage = "triton";
 
-export const defaultCudaResult = "[0, 3, 6, 9, 12]"
+export const defaultCudaResult = ""
+
+export const defaultCudaResultWhenReady = "[0, 3, 6, 9, 12]"
 
 export const defaultTritonResult = `tensor([1.3713, 1.3076, 0.4940,  ..., 0.4024, 1.7918, 1.0686], device='cuda:0')
 tensor([1.3713, 1.3076, 0.4940,  ..., 0.4024, 1.7918, 1.0686], device='cuda:0')

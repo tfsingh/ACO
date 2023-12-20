@@ -31,7 +31,7 @@ func tritonHandler(w http.ResponseWriter, r *http.Request) {
 
     baseKernelStr := string(baseKernel)
     codeStr := string(code)
-    codeStr = strings.Replace(codeStr, "\n", "\n    ", -1)
+    codeStr = strings.Replace(codeStr, "\n", "\n        ", -1)
     baseKernelStr = strings.Replace(baseKernelStr, "# CODE", codeStr, 1)
 
     _, err = tempFile.Write([]byte(baseKernelStr))
@@ -48,6 +48,7 @@ func tritonHandler(w http.ResponseWriter, r *http.Request) {
     }
     fmt.Printf("Temporary File Contents:\n%s\n", string(fileContents))*/
 
+
     cmd := exec.Command("modal", "run", "-q", tempFile.Name())
     output, err := cmd.CombinedOutput()
     if err != nil {
@@ -55,26 +56,12 @@ func tritonHandler(w http.ResponseWriter, r *http.Request) {
         return
     }
 
-	// Modal output trimming
-	outputStr := string(output)
+    outputStr := string(output)
+    if strings.HasSuffix(outputStr, "Stopping app - local entrypoint completed.\n") {
+        outputStr = strings.TrimSuffix(outputStr, "Stopping app - local entrypoint completed.\n")
+    }
 
-	lines := strings.Split(outputStr, "\n")
-
-	if lines[len(lines) - 1] == "" {
-		lines = lines[:len(lines) - 1]
-	}
-	n := len(lines)
-
-	if n > 0 && lines[n-1] == "Stopping app - local entrypoint completed." {
-		lines = lines[:n-1]
-	} else if n > 2 && lines[n-1] == "Runner terminated." {
-		lines = lines[:n-2]
-		lines = append(lines, "Kernel execution took longer than limit (15s)")
-	}
-
-	output = []byte(strings.Join(lines, "\n"))
-
-    fmt.Fprintf(w, "%s", output)
+    fmt.Fprintf(w, outputStr)
 }
 
 

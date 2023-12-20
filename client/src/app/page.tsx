@@ -79,22 +79,22 @@ export default function App() {
           <button
             onClick={() => signIn()}
             type="button"
-            className="border-2 border-emerald-500 btn btn-primary bg-slate-900 text-white text-lg py-1 px-4 w-5/12 sm:text-base"
+            className="border-2 border-emerald-500 btn btn-primary bg-slate-900 text-white text-lg py-1 px-4 w-5/12 text-base"
           >
             Sign In
           </button>
         ) : (
           <div className="flex flex-row w-5/12">
             <select
-              className="border-2 border-blue-500 text-center text-white text-lg py-1 px-4 w-1/3 sm:text-base bg-slate-900"
+              className="border-2 border-blue-500 text-center text-white text-lg py-1 px-4 w-5/12 text-base bg-slate-900"
               onChange={(e) => setselectedLanguage(e.target.value)}
               value={selectedLanguage}
             >
               <option value="cuda">CUDA</option>
-              <option value="triton">Triton</option>
+              <option value="triton">Triton/Numba</option>
             </select>
             <button
-              className="border-2 border-emerald-500 bg-slate-900 text-white w-1/3 text-lg py-1 px-4 sm:text-base"
+              className="border-2 border-emerald-500 bg-slate-900 text-white w-1/3 py-1 px-4 text-base"
               onClick={sendFunction}
             >
               Run Kernel
@@ -102,7 +102,7 @@ export default function App() {
             <button
               onClick={() => signOut()}
               type="button"
-              className="border-2 border-red-500 btn btn-primary text-white text-lg w-1/3 py-1 px-4 sm:text-base bg-slate-900"
+              className="border-2 border-red-500 btn btn-primary text-white text-lg w-1/3 py-1 px-4 text-base bg-slate-900"
             >
               Sign Out
             </button>
@@ -144,6 +144,6 @@ export default function App() {
           {result}
         </pre>
       </div>
-    </div>
+    </div >
   )
 };
