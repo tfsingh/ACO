@@ -1,5 +1,4 @@
-export const defaultCuda = `
-// We're working on CUDA support, primarily trying to figure out a better sandbox
+export const defaultCuda = `// We're working on CUDA support, primarily trying to figure out a better sandbox
 // alternative than Docker on static ec2 instances — if you have any thoughts on this,
 // please send them to tejfsingh@gmail.com!`
 

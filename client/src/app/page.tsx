@@ -3,6 +3,8 @@ import Editor from "@monaco-editor/react";
 import React, { useRef, useState, useEffect } from 'react';
 import { defaultCuda, defaultTriton, defaultLanguage, defaultCudaResult, defaultTritonResult } from "./constants";
 import { useSession, signIn, signOut } from "next-auth/react";
+import Image from "next/image";
+import githubLogo from ".//../../public/github-logo.png"
 
 export default function App() {
   const { data: session } = useSession();
@@ -72,21 +74,26 @@ export default function App() {
   return (
     <div className="flex flex-col">
       <div className="flex flex-row">
+
         <div className="w-full bg-slate-900 text-white text-lg py-1 px-4">
           Accelerated Computing, Online
+        </div>
+        <div className="bg-slate-900">
+          <Image src={githubLogo} height={50} width={50} alt="github" />
         </div>
         {!session?.user?.name ? (
           <button
             onClick={() => signIn()}
             type="button"
-            className="border-2 border-emerald-500 btn btn-primary bg-slate-900 text-white text-lg py-1 px-4 w-5/12 text-base"
+            className="border-2 border-emerald-500 btn btn-primary bg-slate-900 text-white py-1 px-4 w-5/12 text-base rounded"
           >
             Sign In
           </button>
         ) : (
           <div className="flex flex-row w-5/12">
+
             <select
-              className="border-2 border-blue-500 text-center text-white text-lg py-1 px-4 w-5/12 text-base bg-slate-900"
+              className="border-2 border-blue-500 text-center text-white py-1 px-4 w-5/12 text-base bg-slate-900 rounded-l"
               onChange={(e) => setselectedLanguage(e.target.value)}
               value={selectedLanguage}
             >
@@ -102,12 +109,14 @@ export default function App() {
             <button
               onClick={() => signOut()}
               type="button"
-              className="border-2 border-red-500 btn btn-primary text-white text-lg w-1/3 py-1 px-4 text-base bg-slate-900"
+              className="border-2 border-red-500 btn btn-primary text-white w-1/3 py-1 px-4 text-base bg-slate-900 rounded-r"
             >
               Sign Out
             </button>
+
           </div>
         )}
+
       </div>
       <div className="flex flex-row h-screen">
         <div>
@@ -126,7 +135,7 @@ export default function App() {
           ) : (
             <Editor
               height="100vh"
-              width="71vw"
+              width="70vw"
               language="python"
               value={tritonCode}
               theme="vs-dark"
