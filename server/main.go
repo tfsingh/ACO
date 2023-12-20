@@ -65,7 +65,6 @@ func tritonHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	n := len(lines)
 
-	fmt.Println(lines)
 	if n > 0 && lines[n-1] == "Stopping app - local entrypoint completed." {
 		lines = lines[:n-1]
 	} else if n > 2 && lines[n-1] == "Runner terminated." {
