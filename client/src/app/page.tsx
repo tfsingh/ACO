@@ -70,19 +70,51 @@ export default function App() {
   const result = selectedLanguage === "cuda" ? cudaResult : tritonResult;
   const sendFunction = selectedLanguage === "cuda" ? sendCuda : sendTriton;
   return (
-    <div className="flex flex-row">
-      <div className="flex flex-col">
-        <div className="flex flex-row">
-          <div className="w-full bg-black-500 text-white text-lg py-1 px-4">
-            Accelerated Computing, Online
-          </div>
+    <div className="flex flex-col">
+      <div className="flex flex-row">
+        <div className="w-full bg-slate-900 text-white text-lg py-1 px-4">
+          Accelerated Computing, Online
         </div>
-
+        {!session?.user?.name ? (
+          <button
+            onClick={() => signIn()}
+            type="button"
+            className="border-2 border-emerald-500 btn btn-primary bg-slate-900 text-white text-lg py-1 px-4 w-5/12 sm:text-base"
+          >
+            Sign In
+          </button>
+        ) : (
+          <div className="flex flex-row w-5/12">
+            <select
+              className="border-2 border-blue-500 text-center text-white text-lg py-1 px-4 w-1/3 sm:text-base bg-slate-900"
+              onChange={(e) => setselectedLanguage(e.target.value)}
+              value={selectedLanguage}
+            >
+              <option value="cuda">CUDA</option>
+              <option value="triton">Triton</option>
+            </select>
+            <button
+              className="border-2 border-emerald-500 bg-slate-900 text-white w-1/3 text-lg py-1 px-4 sm:text-base"
+              onClick={sendFunction}
+            >
+              Run Kernel
+            </button>
+            <button
+              onClick={() => signOut()}
+              type="button"
+              className="border-2 border-red-500 btn btn-primary text-white text-lg w-1/3 py-1 px-4 sm:text-base bg-slate-900"
+            >
+              Sign Out
+            </button>
+          </div>
+        )}
+      </div>
+      <div className="flex flex-row h-screen">
         <div>
           {selectedLanguage === "cuda" ? (
             <Editor
               height="100vh"
-              width="70vw"
+              width="71vw"
               language="cpp"
               value={cudaCode}
               theme="vs-dark"
@@ -105,48 +137,13 @@ export default function App() {
             />
           )}
         </div>
-      </div>
-
-      <div className="flex flex-col w-screen h-screen">
-        {!session?.user?.name ? (
-          <button
-            onClick={() => signIn()}
-            type="button"
-            className="btn btn-primary w-full bg-emerald-500 text-white text-lg py-1 px-4 sm:text-base"
-          >
-            Sign In
-          </button>
-        ) : (
-          <div className="flex flex-row">
-            <select
-              className="bg-emerald-500 text-white text-lg py-1 px-4 w-1/3 sm:text-base"
-              onChange={(e) => setselectedLanguage(e.target.value)}
-              value={selectedLanguage}
-            >
-              <option value="cuda">CUDA</option>
-              <option value="triton">Triton</option>
-            </select>
-            <button
-              className="bg-blue-500 text-left text-white text-lg py-1 px-4 w-1/3 sm:text-base"
-              onClick={sendFunction}
-            >
-              Execute Kernel
-            </button>
-            <button
-              onClick={() => signOut()}
-              type="button"
-              className="btn btn-primary w-1/3 bg-red-500 text-white text-lg py-1 px-4 sm:text-base"
-            >
-              Sign Out
-            </button>
-          </div>
-        )}
         <pre
-          className="text-sm text-zinc-300 pt-1 float-right font-mono overflow-y-auto"
+          className="text-xs text-zinc-300 pt-1 float-right font-mono overflow-y-auto"
           style={{ whiteSpace: "pre-wrap" }}
         >
           {result}
         </pre>
       </div>
-    </div>)
+    </div>
+  )
 };
