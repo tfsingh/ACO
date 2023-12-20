@@ -79,7 +79,7 @@ export default function App() {
           Accelerated Computing, Online
         </div>
         <div className="bg-slate-900">
-          <Image src={githubLogo} height={50} width={50} alt="github" />
+          <a href="https://github.com/tfsingh/aconline"><Image src={githubLogo} height={50} width={50} alt="github" /></a>
         </div>
         {!session?.user?.name ? (
           <button
@@ -97,8 +97,8 @@ export default function App() {
               onChange={(e) => setselectedLanguage(e.target.value)}
               value={selectedLanguage}
             >
-              <option value="cuda">CUDA</option>
               <option value="triton">Triton/Numba</option>
+              <option value="cuda">CUDA</option>
             </select>
             <button
               className="border-2 border-emerald-500 bg-slate-900 text-white w-1/3 py-1 px-4 text-base"
