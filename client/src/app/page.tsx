@@ -1,7 +1,7 @@
 "use client";
 import Editor from "@monaco-editor/react";
 import React, { useRef, useState, useEffect } from 'react';
-import { defaultCuda, defaultTriton, defaultLanguage, defaultResult } from "./constants";
+import { defaultCuda, defaultTriton, defaultLanguage, defaultCudaResult, defaultTritonResult } from "./constants";
 import { useSession, signIn, signOut } from "next-auth/react";
 
 export default function App() {
@@ -24,12 +24,12 @@ export default function App() {
 
   const [cudaResult, setCudaResult] = useState<string>(() => {
     const storedCudaResult = localStorage.getItem('cudaResult');
-    return storedCudaResult === '__empty__' ? '' : storedCudaResult || defaultResult;
+    return storedCudaResult === '__empty__' ? '' : storedCudaResult || defaultCudaResult;
   });
 
   const [tritonResult, setTritonResult] = useState<string>(() => {
     const storedTritonResult = localStorage.getItem('tritonResult');
-    return storedTritonResult === '__empty__' ? '' : storedTritonResult || defaultResult;
+    return storedTritonResult === '__empty__' ? '' : storedTritonResult || defaultTritonResult;
   });
 
   const editorRef = useRef<any>(null);
@@ -126,7 +126,7 @@ export default function App() {
           ) : (
             <Editor
               height="100vh"
-              width="70vw"
+              width="71vw"
               language="python"
               value={tritonCode}
               theme="vs-dark"
