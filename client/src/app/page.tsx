@@ -6,33 +6,32 @@ import { useSession, signIn, signOut } from "next-auth/react";
 import Image from "next/image";
 import githubLogo from ".//../../public/github-logo.png"
 
+const useLocalStorageState = (key: any, defaultValue: any) => {
+  const storedValue = localStorage.getItem(key);
+  const initial = storedValue === '__empty__' ? '' : storedValue || defaultValue;
+
+  const [state, setState] = useState(initial);
+
+  const setLocalStorageState = (value: any) => {
+    if (value === '__empty__') {
+      localStorage.removeItem(key);
+    } else {
+      localStorage.setItem(key, value);
+    }
+    setState(value);
+  };
+
+  return [state, setLocalStorageState];
+};
+
 export default function App() {
   const { data: session } = useSession();
 
-  const [selectedLanguage, setselectedLanguage] = useState<string>(() => {
-    const storedLanguage = localStorage.getItem('selectedLanguage');
-    return storedLanguage || defaultLanguage;
-  });
-
-  const [cudaCode, setCudaCode] = useState<string | undefined>(() => {
-    const storedCudaCode = localStorage.getItem('cudaCode');
-    return storedCudaCode === '__empty__' ? '' : storedCudaCode || defaultCuda;
-  });
-
-  const [tritonCode, setTritonCode] = useState<string | undefined>(() => {
-    const storedTritonCode = localStorage.getItem('tritonCode');
-    return storedTritonCode === '__empty__' ? '' : storedTritonCode || defaultTriton;
-  });
-
-  const [cudaResult, setCudaResult] = useState<string>(() => {
-    const storedCudaResult = localStorage.getItem('cudaResult');
-    return storedCudaResult === '__empty__' ? '' : storedCudaResult || defaultCudaResult;
-  });
-
-  const [tritonResult, setTritonResult] = useState<string>(() => {
-    const storedTritonResult = localStorage.getItem('tritonResult');
-    return storedTritonResult === '__empty__' ? '' : storedTritonResult || defaultTritonResult;
-  });
+  const [selectedLanguage, setSelectedLanguage] = useLocalStorageState('selectedLanguage', defaultLanguage);
+  const [cudaCode, setCudaCode] = useLocalStorageState('cudaCode', defaultCuda);
+  const [tritonCode, setTritonCode] = useLocalStorageState('tritonCode', defaultTriton);
+  const [cudaResult, setCudaResult] = useLocalStorageState('cudaResult', defaultCudaResult);
+  const [tritonResult, setTritonResult] = useLocalStorageState('tritonResult', defaultTritonResult);
 
   const editorRef = useRef<any>(null);
 
@@ -41,14 +40,17 @@ export default function App() {
   }
 
   useEffect(() => {
-    if (selectedLanguage === "cuda") {
-      localStorage.setItem('cudaCode', cudaCode === '' ? '__empty__' : cudaCode || '');
-      localStorage.setItem('cudaResult', cudaResult === '' ? '__empty__' : cudaResult);
-    } else if (selectedLanguage === "triton") {
-      localStorage.setItem('tritonCode', tritonCode === '' ? '__empty__' : tritonCode || '');
-      localStorage.setItem('tritonResult', tritonResult === '' ? '__empty__' : tritonResult);
-    }
+    const languageVariables: { [key: string]: { code: string | undefined; result: string } } = {
+      cuda: { code: cudaCode, result: cudaResult },
+      triton: { code: tritonCode, result: tritonResult },
+    };
+
+    const selectedLanguageVariables = languageVariables[selectedLanguage] || {};
+    const { code = '', result = '' } = selectedLanguageVariables;
+
     localStorage.setItem('selectedLanguage', selectedLanguage);
+    localStorage.setItem(`${selectedLanguage}Code`, code === '' ? '__empty__' : code);
+    localStorage.setItem(`${selectedLanguage}Result`, result === '' ? '__empty__' : result);
   }, [cudaCode, cudaResult, tritonCode, tritonResult, selectedLanguage]);
 
   function sendCuda() {
@@ -60,13 +62,30 @@ export default function App() {
     setCudaResult(executionResult);
   }
 
-  function sendTriton() {
+  async function sendTriton() {
     if (editorRef.current == null) {
       return;
     }
 
-    let executionResult = editorRef.current.getValue();
-    setTritonResult(executionResult);
+    try {
+      const response = await fetch('http://localhost:8080/triton', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'text/plain',
+        },
+        body: editorRef.current.getValue(),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to send Triton request');
+      }
+
+      const data = await response.json();
+
+      setTritonResult(data.result);
+    } catch (error) {
+      console.error('Error sending Triton request:', error);
+    }
   }
 
   const result = selectedLanguage === "cuda" ? cudaResult : tritonResult;
@@ -94,7 +113,7 @@ export default function App() {
 
             <select
               className="border-2 border-blue-500 text-center text-white py-1 px-4 w-5/12 text-base bg-slate-900 rounded-l"
-              onChange={(e) => setselectedLanguage(e.target.value)}
+              onChange={(e) => setSelectedLanguage(e.target.value)}
               value={selectedLanguage}
             >
               <option value="triton">Triton/Numba</option>
