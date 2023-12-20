@@ -24,5 +24,4 @@ def main():
     try:
         execute_kernel.remote()
     except TimeoutError as e:
-        print(e)
-    
+        pass

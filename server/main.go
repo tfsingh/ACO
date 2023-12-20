@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bytes"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -49,18 +48,39 @@ func tritonHandler(w http.ResponseWriter, r *http.Request) {
     }
     fmt.Printf("Temporary File Contents:\n%s\n", string(fileContents))*/
 
-    cmd := exec.Command("modal", "run", tempFile.Name())
+    cmd := exec.Command("modal", "run", "-q", tempFile.Name())
     output, err := cmd.CombinedOutput()
     if err != nil {
-        fmt.Fprintf(w, "Error executing Triton command: %s\n", err)
+        fmt.Fprintf(w, "Error executing Triton command: %s\n", output)
         return
     }
 
-    fmt.Fprintf(w, "Triton Output:\n%s\n", output)
+	// Modal output trimming
+	outputStr := string(output)
+
+	lines := strings.Split(outputStr, "\n")
+
+	if lines[len(lines) - 1] == "" {
+		lines = lines[:len(lines) - 1]
+	}
+	n := len(lines)
+
+	fmt.Println(lines)
+	if n > 0 && lines[n-1] == "Stopping app - local entrypoint completed." {
+		lines = lines[:n-1]
+	} else if n > 2 && lines[n-1] == "Runner terminated." {
+		lines = lines[:n-2]
+		lines = append(lines, "Kernel execution took longer than limit (15s)")
+	}
+
+	output = []byte(strings.Join(lines, "\n"))
+
+    fmt.Fprintf(w, "%s", output)
 }
 
 
-func cudaHandler(w http.ResponseWriter, r *http.Request) {	
+func cudaHandler(w http.ResponseWriter, r *http.Request) {
+	return
 }
 
 func main() {
