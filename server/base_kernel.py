@@ -1,4 +1,5 @@
 import modal
+import signal 
 
 triton_image = modal.Image.debian_slim().pip_install("triton", "torch")
 
@@ -15,4 +16,13 @@ def execute_kernel():
 
 @stub.local_entrypoint()
 def main():
-    execute_kernel.remote()
+    def signal_handler(signum, frame):
+        raise TimeoutError("Kernel execution timed out")
+
+    signal.signal(signal.SIGALRM, signal_handler)
+    signal.alarm(15)
+    try:
+        execute_kernel.remote()
+    except TimeoutError as e:
+        print(e)
+    
