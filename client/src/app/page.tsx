@@ -1,11 +1,11 @@
 "use client";
-import Editor from "@monaco-editor/react";
 import React, { useRef, useEffect } from 'react';
 import { defaultCuda, defaultTriton, defaultLanguage, defaultCudaResult, defaultTritonResult } from "./constants";
 import { useSession } from "next-auth/react";
-
 import useLocalStorageState from "./LocalStorageState";
 import Header from "./Header";
+import EditorResult from "./EditorResult"
+import { sendTriton } from "./KernelExecution"
 
 export default function App() {
   const { data: session } = useSession();
@@ -36,45 +36,18 @@ export default function App() {
     localStorage.setItem(`${selectedLanguage}Result`, result === '' ? '__empty__' : result);
   }, [cudaCode, cudaResult, tritonCode, tritonResult, selectedLanguage]);
 
-  function sendCuda() {
-    if (editorRef.current == null) {
-      return;
-    }
-
-    let executionResult = editorRef.current.getValue();
-    setCudaResult(executionResult);
-  }
-
-  async function sendTriton() {
-    if (editorRef.current == null) {
-      return;
-    }
-
-    try {
-      setTritonResult("Executing kernel...")
-      const response = await fetch('http://localhost:8080/triton', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'text/plain',
-        },
-        body: editorRef.current.getValue(),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to send Triton request');
-      }
-
-      const data = await response.json();
-
-      setTritonResult(data.result);
-    } catch (error) {
-      setTritonResult("Error executing request")
-    }
-  }
-
-
   const result = selectedLanguage === "cuda" ? cudaResult : tritonResult;
-  const sendFunction = selectedLanguage === "cuda" ? sendCuda : sendTriton;
+  const sendFunction = selectedLanguage === "cuda"
+    ? () => { setCudaResult("CUDA not yet supported!") }
+    : async () => {
+      if (editorRef.current == null) {
+        return;
+      }
+      setTritonResult("Executing kernel...");
+      const intermediate = await sendTriton(editorRef);
+      setTritonResult(intermediate);
+    };
+
   return (
     <div className="flex flex-col">
       <Header
@@ -83,41 +56,15 @@ export default function App() {
         setSelectedLanguage={setSelectedLanguage}
         sendFunction={sendFunction}
       />
-      <div className="flex flex-row h-screen">
-        <div>
-          {selectedLanguage === "cuda" ? (
-            <Editor
-              height="100vh"
-              width="70vw"
-              language="cpp"
-              value={cudaCode}
-              theme="vs-dark"
-              onMount={handleEditorDidMount}
-              onChange={(newCudaCode: string | undefined) =>
-                setCudaCode(newCudaCode)
-              }
-            />
-          ) : (
-            <Editor
-              height="100vh"
-              width="70vw"
-              language="python"
-              value={tritonCode}
-              theme="vs-dark"
-              onMount={handleEditorDidMount}
-              onChange={(newTritonCode: string | undefined) =>
-                setTritonCode(newTritonCode)
-              }
-            />
-          )}
-        </div>
-        <pre
-          className="text-xs text-zinc-300 pt-1 float-right font-mono overflow-y-auto"
-          style={{ whiteSpace: "pre-wrap" }}
-        >
-          {result}
-        </pre>
-      </div>
+      <EditorResult
+        handleEditorDidMount={handleEditorDidMount}
+        selectedLanguage={selectedLanguage}
+        setCudaCode={setCudaCode}
+        setTritonCode={setTritonCode}
+        cudaCode={cudaCode}
+        tritonCode={tritonCode}
+        result={result}
+      />
     </div >
   )
 };
