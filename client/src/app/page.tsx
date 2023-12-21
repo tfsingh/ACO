@@ -5,24 +5,7 @@ import { defaultCuda, defaultTriton, defaultLanguage, defaultCudaResult, default
 import { useSession, signIn, signOut } from "next-auth/react";
 import Image from "next/image";
 import githubLogo from ".//../../public/github-logo.png"
-
-const useLocalStorageState = (key: any, defaultValue: any) => {
-  const storedValue = localStorage.getItem(key);
-  const initial = storedValue === '__empty__' ? '' : storedValue || defaultValue;
-
-  const [state, setState] = useState(initial);
-
-  const setLocalStorageState = (value: any) => {
-    if (value === '__empty__') {
-      localStorage.removeItem(key);
-    } else {
-      localStorage.setItem(key, value);
-    }
-    setState(value);
-  };
-
-  return [state, setLocalStorageState];
-};
+import useLocalStorageState from "./LocalStorageState";
 
 export default function App() {
   const { data: session } = useSession();
@@ -68,6 +51,7 @@ export default function App() {
     }
 
     try {
+      setTritonResult("Executing kernel...")
       const response = await fetch('http://localhost:8080/triton', {
         method: 'POST',
         headers: {
@@ -84,7 +68,7 @@ export default function App() {
 
       setTritonResult(data.result);
     } catch (error) {
-      console.error('Error sending Triton request:', error);
+      setTritonResult("Error executing request")
     }
   }
 
@@ -154,7 +138,7 @@ export default function App() {
           ) : (
             <Editor
               height="100vh"
-              width="70vw"
+              width="71vw"
               language="python"
               value={tritonCode}
               theme="vs-dark"
