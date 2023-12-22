@@ -7,6 +7,7 @@ import (
 	"os"
 	"os/exec"
 	"strings"
+    "github.com/redis/go-redis/v9"
 )
 
 func tritonHandler(w http.ResponseWriter, r *http.Request) {
