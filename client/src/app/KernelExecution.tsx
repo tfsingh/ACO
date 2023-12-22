@@ -1,3 +1,5 @@
+const endpoint = process.env.SERVER_DNS
+
 export async function sendCuda(editorRef: any) {
     if (editorRef.current == null) {
         return;
@@ -17,7 +19,7 @@ export async function sendTriton(editorRef: any, email: string) {
     };
 
     try {
-        const response = await fetch('http://localhost:8080/triton', {
+        const response = await fetch(endpoint + '/triton', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
