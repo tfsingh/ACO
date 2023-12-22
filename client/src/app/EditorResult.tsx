@@ -30,9 +30,11 @@ const Header: React.FC<EditorResultProps> = ({
                         value={cudaCode}
                         theme="vs-dark"
                         onMount={handleEditorDidMount}
-                        onChange={(newCudaCode: string | undefined) =>
-                            setCudaCode(newCudaCode)
-                        }
+                        onChange={(newCudaCode: string | undefined) => {
+                            if (newCudaCode) {
+                                setCudaCode(newCudaCode)
+                            }
+                        }}
                     />
                 ) : (
                     <Editor
@@ -42,9 +44,11 @@ const Header: React.FC<EditorResultProps> = ({
                         value={tritonCode}
                         theme="vs-dark"
                         onMount={handleEditorDidMount}
-                        onChange={(newTritonCode: string | undefined) =>
-                            setTritonCode(newTritonCode)
-                        }
+                        onChange={(newTritonCode: string | undefined) => {
+                            if (newTritonCode) {
+                                setTritonCode(newTritonCode)
+                            }
+                        }}
                     />
                 )}
             </div>

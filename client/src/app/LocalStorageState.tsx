@@ -1,7 +1,11 @@
 import { useState } from "react";
 
 const useLocalStorageState = (key: any, defaultValue: any) => {
-    const storedValue = localStorage.getItem(key);
+    let storedValue = "__empty__"
+    if (typeof localStorage !== "undefined") {
+        //@ts-ignore
+        storedValue = localStorage.getItem(key);
+    }
     const initial = storedValue === '__empty__' ? '' : storedValue || defaultValue;
 
     const [state, setState] = useState(initial);
