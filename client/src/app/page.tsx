@@ -51,12 +51,10 @@ export default function App() {
         const updateElapsedTime = () => {
           const currentTime = performance.now();
           const elapsedTime = (currentTime - startTime) / 1000;
-          setTritonResult(`Executing kernel (${elapsedTime.toFixed(2)} seconds)`);
+          setTritonResult(`\nExecuting kernel (${elapsedTime.toFixed(2)} seconds)`);
         };
 
         try {
-          setTritonResult("Executing kernel...");
-
           startTime = performance.now();
           intervalId = setInterval(updateElapsedTime);
 
@@ -65,7 +63,7 @@ export default function App() {
           clearInterval(intervalId);
           const totalElapsedTime = (performance.now() - startTime) / 1000;
 
-          setTritonResult(`${result}\nKernel execution completed in ${totalElapsedTime.toFixed(2)} seconds`);
+          setTritonResult(`\n${result}\nKernel execution completed in ${totalElapsedTime.toFixed(2)} seconds`);
         } catch (error) {
           clearInterval(intervalId);
           setTritonResult(`Error in kernel execution`);
