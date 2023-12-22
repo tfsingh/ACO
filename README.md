@@ -11,7 +11,7 @@ The following packages are included in the Triton/Numba environment:
 - Numpy
 - Pandas
 
-Every request is executed on a NVIDIA T4 GPU, with an execution limit of 15s. We rate-limit users to 30 requests every 24 hours; we'll be monitoring traffic as time goes on and will hopefully be able to increase this limit accordingly.
+Every request is executed on a NVIDIA T4 GPU, with an execution limit of 15s. We rate-limit users to 30 requests every 24 hours; we'll be monitoring traffic as time goes on and will hopefully be able to increase this limit accordingly. As of current, code/execution results are stored locally.
 
 ### FAQs
 
@@ -22,5 +22,9 @@ We do this solely for the purposes of rate limiting — we understand this may b
 **When are you adding CUDA support?**
 
 We hope to be adding CUDA support in the next few weeks — we're exploring options including our existing infra provider or a bespoke execution sandbox.
+
+**Do you plan on charging?**
+
+No. Executing code serverlessly is a major benefit in this regard, albeit at the cost of speed. We're also lucky in that Triton and CUDA are quite niche, and our use cases (primarily pedagogical) further limit the number of people that would benefit from something like this. If you're here, welcome — this was built for you!
 
 Further questions can be sent to tejfsingh@gmail.com.
