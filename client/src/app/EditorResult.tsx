@@ -3,8 +3,8 @@ import Editor from "@monaco-editor/react";
 interface EditorResultProps {
     handleEditorDidMount: any;
     selectedLanguage: string;
-    setCudaCode: React.Dispatch<React.SetStateAction<string | undefined>>;
-    setTritonCode: React.Dispatch<React.SetStateAction<string | undefined>>;
+    setCudaCode: (value: string) => void;
+    setTritonCode: (value: string) => void;
     cudaCode: string;
     tritonCode: string;
     result: string;

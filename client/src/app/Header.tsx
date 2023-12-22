@@ -5,7 +5,7 @@ import githubLogo from ".//../../public/github-logo.png"
 interface HeaderProps {
     session: any;
     selectedLanguage: string;
-    setSelectedLanguage: React.Dispatch<React.SetStateAction<string>>;
+    setSelectedLanguage: (value: string) => void;
     sendFunction: () => void;
 }
 
