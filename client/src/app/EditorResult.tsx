@@ -53,7 +53,7 @@ const Header: React.FC<EditorResultProps> = ({
                 )}
             </div>
             <pre
-                className="text-xs text-zinc-300 pt-1 pl-1 float-right font-mono overflow-y-auto"
+                className="text-xs text-zinc-300 pt-5 pl-1 float-right font-mono overflow-y-auto"
                 style={{ whiteSpace: "pre-wrap" }}
             >
                 {result}
