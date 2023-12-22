@@ -17,10 +17,10 @@ Every request is executed on a NVIDIA T4 GPU, with an execution limit of 15s. We
 
 **Why do you require sign-in?**
 
-We do this solely for the purposes of rate limiting — we understand this may be frustrating, but gpus are expensive!
+We do this solely for the purposes of rate limiting — we understand this may be frustrating, but GPUs are expensive!
 
 **When are you adding CUDA support?**
 
-We hope to be adding CUDA support in the next few weeks — we might use our existing infra provider but are exploring options, including a bespoke execution sandbox.
+We hope to be adding CUDA support in the next few weeks — we're exploring options including our existing infra provider or a bespoke execution sandbox.
 
-Please feel free to email any further questions to tejfsingh@gmail.com.
+Further questions can be sent to tejfsingh@gmail.com.
