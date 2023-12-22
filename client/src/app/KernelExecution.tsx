@@ -6,27 +6,31 @@ export async function sendCuda(editorRef: any) {
     let executionResult = editorRef.current.getValue();
 }
 
-export async function sendTriton(editorRef: any) {
+export async function sendTriton(editorRef: any, email: string | null | undefined) {
     if (editorRef.current == null) {
         return;
     }
+
+    const requestBody = {
+        code: editorRef.current.getValue(),
+        email: email,
+    };
 
     try {
         const response = await fetch('http://localhost:8080/triton', {
             method: 'POST',
             headers: {
-                'Content-Type': 'text/plain',
+                'Content-Type': 'application/json',
             },
-            body: editorRef.current.getValue(),
+            body: JSON.stringify(requestBody),
         });
 
         if (!response.ok) {
             throw new Error('Failed to send Triton request');
         }
 
-        const data = await response.json();
-
+        return await response.json();
     } catch (error) {
-        return "Error executing request"
+        return "Error executing request";
     }
 }

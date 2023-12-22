@@ -44,8 +44,7 @@ export default function App() {
         return;
       }
       setTritonResult("Executing kernel...");
-      const intermediate = await sendTriton(editorRef);
-      setTritonResult(intermediate);
+      setTritonResult(await sendTriton(editorRef, session?.user?.email));
     };
 
   return (
