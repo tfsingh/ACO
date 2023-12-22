@@ -1,21 +1,96 @@
 package main
 
 import (
+    "context"
 	"fmt"
 	"io/ioutil"
 	"net/http"
 	"os"
 	"os/exec"
+    "time"
 	"strings"
+    "strconv"
+    "encoding/json"
     "github.com/redis/go-redis/v9"
+    "github.com/joho/godotenv"
 )
 
+const MaxRequests = 9
+
+type RequestBody struct {
+	Code  string `json:"code"`
+	Email string `json:"email"`
+}
+
+func rateLimit(email string) error {
+	envErr := godotenv.Load()
+	if envErr != nil {
+		return fmt.Errorf("Error loading .env file")
+	}
+
+	var ctx = context.Background()
+	redisEndpoint := os.Getenv("REDIS_ENDPOINT")
+	redisPassword := os.Getenv("REDIS_PASSWORD")
+
+	rdb := redis.NewClient(&redis.Options{
+		Addr:     redisEndpoint,
+		Password: redisPassword,
+		DB:       0,
+	})
+	key := "rate_limit:" + email
+	expiration := 24 * time.Hour
+
+	val, err := rdb.Get(ctx, key).Result()
+
+	if err == redis.Nil {
+		err := rdb.Set(ctx, key, 1, expiration).Err()
+		if err != nil {
+			return fmt.Errorf("Error setting rate limit: %v", err)
+		}
+	} else if err != nil {
+		return fmt.Errorf("Error getting rate limit: %v", err)
+	} else {
+		count, err := strconv.Atoi(val)
+		if err != nil {
+			return fmt.Errorf("Error converting count to integer: %v", err)
+		}
+
+		if count >= MaxRequests {
+			return fmt.Errorf("Request limit exceeded for email: %s", email)
+		}
+
+		err = rdb.Incr(ctx, key).Err()
+		if err != nil {
+			return fmt.Errorf("Error incrementing rate limit: %v", err)
+		}
+	}
+
+	return nil
+}
+
 func tritonHandler(w http.ResponseWriter, r *http.Request) {
-    code, err := ioutil.ReadAll(r.Body)
+    body, err := ioutil.ReadAll(r.Body)
     if err != nil {
         http.Error(w, "Error reading code from request", http.StatusBadRequest)
         return
     }
+
+    var requestBody RequestBody
+	err = json.Unmarshal(body, &requestBody)
+	if err != nil {
+		http.Error(w, "Error decoding JSON", http.StatusBadRequest)
+		return
+	}
+
+    code := requestBody.Code
+	email := requestBody.Email
+
+    err = rateLimit(email)
+	if err != nil {
+		fmt.Errorf("Error in rate limiting:", err)
+        fmt.Fprintf(w, "Reached rate limit on requests (resets every 24h).")
+		return
+	}
 
     tempFile, err := ioutil.TempFile("", "kernel-*.py")
     if err != nil {
@@ -65,9 +140,8 @@ func tritonHandler(w http.ResponseWriter, r *http.Request) {
     fmt.Fprintf(w, outputStr)
 }
 
-
 func cudaHandler(w http.ResponseWriter, r *http.Request) {
-	return
+    return;
 }
 
 func main() {

@@ -19,7 +19,6 @@ const Header: React.FC<EditorResultProps> = ({
     tritonCode,
     result
 }) => {
-
     return (
         <div className="flex flex-row h-screen">
             <div>
