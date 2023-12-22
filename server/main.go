@@ -12,7 +12,7 @@ import (
     "strings"
     "time"
     "github.com/redis/go-redis/v9"
-    "github.com/joho/godotenv"
+    //"github.com/joho/godotenv"
 )
 
 const MaxRequests = 30
@@ -23,10 +23,10 @@ type RequestBody struct {
 }
 
 func rateLimit(email string) error {
-	envErr := godotenv.Load()
+	/*envErr := godotenv.Load()
 	if envErr != nil {
 		return fmt.Errorf("Error loading .env file")
-	}
+	}*/
 
 	var ctx = context.Background()
 	redisEndpoint := os.Getenv("REDIS_ENDPOINT")

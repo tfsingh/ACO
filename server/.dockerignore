@@ -1,2 +1,4 @@
-# flyctl launch added from .gitignore
-**/__pycache__
+.gitignore
+.env
+__pycache__
+.DS_Store
