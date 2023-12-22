@@ -45,10 +45,33 @@ export default function App() {
       }
       const userEmail = session?.user?.email;
       if (userEmail) {
-        setTritonResult("Executing kernel...");
-        setTritonResult(await sendTriton(editorRef, userEmail));
+        let startTime: any;
+        let intervalId;
+
+        const updateElapsedTime = () => {
+          const currentTime = performance.now();
+          const elapsedTime = (currentTime - startTime) / 1000;
+          setTritonResult(`Executing kernel (${elapsedTime.toFixed(2)} seconds)`);
+        };
+
+        try {
+          setTritonResult("Executing kernel...");
+
+          startTime = performance.now();
+          intervalId = setInterval(updateElapsedTime);
+
+          const result = await sendTriton(editorRef, userEmail);
+
+          clearInterval(intervalId);
+          const totalElapsedTime = (performance.now() - startTime) / 1000;
+
+          setTritonResult(`${result}\nKernel execution completed in ${totalElapsedTime.toFixed(2)} seconds`);
+        } catch (error) {
+          clearInterval(intervalId);
+          setTritonResult(`Error in kernel execution`);
+        }
       } else {
-        setTritonResult("User not logged in")
+        setTritonResult("User not logged in");
       }
     };
 
