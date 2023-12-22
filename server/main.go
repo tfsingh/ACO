@@ -2,17 +2,17 @@ package main
 
 import (
     "context"
-	"fmt"
-	"io/ioutil"
-	"net/http"
-	"os"
-	"os/exec"
-    "time"
-	"strings"
-    "strconv"
     "encoding/json"
+    "fmt"
+    "io/ioutil"
+    "net/http"
+    "os"
+    "os/exec"
+    "strconv"
+    "strings"
+    "time"
     "github.com/redis/go-redis/v9"
-    "github.com/joho/godotenv"
+    //"github.com/joho/godotenv"
 )
 
 const MaxRequests = 15
@@ -23,10 +23,10 @@ type RequestBody struct {
 }
 
 func rateLimit(email string) error {
-	envErr := godotenv.Load()
-	if envErr != nil {
-		return fmt.Errorf("Error loading .env file")
-	}
+	// envErr := godotenv.Load()
+	// if envErr != nil {
+	// 	return fmt.Errorf("Error loading .env file")
+	// }
 
 	var ctx = context.Background()
 	redisEndpoint := os.Getenv("REDIS_ENDPOINT")
@@ -134,7 +134,6 @@ func tritonHandler(w http.ResponseWriter, r *http.Request) {
         return
     }
     fmt.Printf("Temporary File Contents:\n%s\n", string(fileContents))*/
-
 
     cmd := exec.Command("modal", "run", "-q", tempFile.Name())
     output, err := cmd.CombinedOutput()
