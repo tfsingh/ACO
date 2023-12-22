@@ -1,4 +1,4 @@
-const endpoint = process.env.SERVER_DNS
+const endpoint = process.env.NEXT_PUBLIC_ENDPOINT
 
 export async function sendCuda(editorRef: any) {
     if (editorRef.current == null) {
