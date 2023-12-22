@@ -168,7 +168,7 @@ func main() {
 	http.HandleFunc("/triton", tritonHandler)
 	http.HandleFunc("/cuda", cudaHandler)
 
-	port := 8080
+	port := 443
 	fmt.Printf("Server listening on :%d\n", port)
 	err := http.ListenAndServe(fmt.Sprintf(":%d", port), nil)
 	if err != nil {
