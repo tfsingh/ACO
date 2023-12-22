@@ -43,8 +43,13 @@ export default function App() {
       if (editorRef.current == null) {
         return;
       }
-      setTritonResult("Executing kernel...");
-      setTritonResult(await sendTriton(editorRef, session?.user?.email));
+      const userEmail = session?.user?.email;
+      if (userEmail) {
+        setTritonResult("Executing kernel...");
+        setTritonResult(await sendTriton(editorRef, userEmail));
+      } else {
+        setTritonResult("User not logged in")
+      }
     };
 
   return (

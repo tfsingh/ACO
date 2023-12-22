@@ -15,7 +15,8 @@
     "next": "13.5.4",
     "next-auth": "^4.24.3",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "redis": "^4.6.12"
   },
   "devDependencies": {
     "@types/node": "^20",

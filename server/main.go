@@ -31,12 +31,21 @@ func rateLimit(email string) error {
 	var ctx = context.Background()
 	redisEndpoint := os.Getenv("REDIS_ENDPOINT")
 	redisPassword := os.Getenv("REDIS_PASSWORD")
+    whitelistKey := os.Getenv("WHITELIST_KEY")
 
 	rdb := redis.NewClient(&redis.Options{
 		Addr:     redisEndpoint,
 		Password: redisPassword,
 		DB:       0,
 	})
+
+    isMember, err := rdb.SIsMember(context.Background(), whitelistKey, email).Result()
+    if err != nil {
+        return fmt.Errorf("Error reading whitelist: %v", err)
+    } else if !isMember {
+        return fmt.Errorf("User is not whitelisted")
+    }
+
 	key := "rate_limit:" + email
 	expiration := 24 * time.Hour
 
@@ -98,7 +107,7 @@ func tritonHandler(w http.ResponseWriter, r *http.Request) {
 
     err = rateLimit(email)
 	if err != nil {
-		fmt.Errorf("Error in rate limiting:", err)
+		fmt.Println("Error in rate limiting:", err)
         fmt.Fprintf(w, "Reached rate limit on requests (resets every 24h).")
 		return
 	}
@@ -133,7 +142,8 @@ func tritonHandler(w http.ResponseWriter, r *http.Request) {
         http.Error(w, "Error reading temporary file", http.StatusInternalServerError)
         return
     }
-    fmt.Printf("Temporary File Contents:\n%s\n", string(fileContents))*/
+    fmt.Printf("Temporary File Contents:\n%s\n", string(fileContents))
+    */
 
     cmd := exec.Command("modal", "run", "-q", tempFile.Name())
     output, err := cmd.CombinedOutput()

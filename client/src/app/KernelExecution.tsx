@@ -6,7 +6,7 @@ export async function sendCuda(editorRef: any) {
     let executionResult = editorRef.current.getValue();
 }
 
-export async function sendTriton(editorRef: any, email: string | null | undefined) {
+export async function sendTriton(editorRef: any, email: string) {
     if (editorRef.current == null) {
         return;
     }
