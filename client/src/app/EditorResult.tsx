@@ -35,6 +35,7 @@ const Header: React.FC<EditorResultProps> = ({
                                 setCudaCode(newCudaCode)
                             }
                         }}
+                        options={{ scrollbar: { vertical: "hidden" } }}
                     />
                 ) : (
                     <Editor
@@ -49,11 +50,12 @@ const Header: React.FC<EditorResultProps> = ({
                                 setTritonCode(newTritonCode)
                             }
                         }}
+                        options={{ scrollbar: { vertical: "hidden" } }}
                     />
                 )}
             </div>
             <pre
-                className="text-xs text-zinc-300 pt-5 pl-1 float-right font-mono overflow-y-auto"
+                className="text-xs text-zinc-300 pt-5 pl-2.5 float-right font-mono overflow-y-auto"
                 style={{ whiteSpace: "pre-wrap" }}
             >
                 {result}
