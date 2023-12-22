@@ -15,7 +15,7 @@ import (
     "github.com/joho/godotenv"
 )
 
-const MaxRequests = 15
+const MaxRequests = 30
 
 type RequestBody struct {
 	Code  string `json:"code"`
@@ -161,7 +161,7 @@ func tritonHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func cudaHandler(w http.ResponseWriter, r *http.Request) {
-    return;
+    fmt.Fprintf(w, "CUDA not supported")
 }
 
 func main() {
