@@ -78,8 +78,7 @@ func rateLimit(email string) error {
 }
 
 func tritonHandler(w http.ResponseWriter, r *http.Request) {
-    /*
-    w.Header().Set("Access-Control-Allow-Origin", "*")
+    w.Header().Set("Access-Control-Allow-Origin", "acceleratedcomputingonline.com")
 	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
 	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 
@@ -87,7 +86,6 @@ func tritonHandler(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 		return
 	}
-    */
 
     body, err := ioutil.ReadAll(r.Body)
     if err != nil {
