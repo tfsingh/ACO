@@ -15,7 +15,7 @@ import (
     "github.com/joho/godotenv"
 )
 
-const MaxRequests = 9
+const MaxRequests = 15
 
 type RequestBody struct {
 	Code  string `json:"code"`
