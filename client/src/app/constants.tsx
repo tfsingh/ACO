@@ -1,6 +1,4 @@
-export const defaultCuda = `// We're working on CUDA support, primarily trying to figure out a better sandbox
-// alternative than Docker on static ec2 instances — if you have any thoughts on this,
-// please send them to tejfsingh@gmail.com!`
+export const defaultCuda = `// We're working on CUDA support, and will have it ready in the next few weeks!`
 
 export const defaultCudaWhenReady = `// Here's some CUDA to get you started!
 #include <iostream>
