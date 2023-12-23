@@ -54,12 +54,11 @@ const Header: React.FC<EditorResultProps> = ({
                     />
                 )}
             </div>
-            <pre
-                className="text-xs text-zinc-300 pt-5 pl-2.5 float-right font-mono overflow-y-auto"
-                style={{ whiteSpace: "pre-wrap" }}
+            <div
+                className="text-xs text-zinc-300 pt-5 pl-2.5 pr-5 float-right font-mono overflow-y-auto whitespace-pre-wrap"
             >
                 {result}
-            </pre>
+            </div>
         </div>
     );
 };
