@@ -21,23 +21,19 @@ const Header: React.FC<HeaderProps> = ({
             <div className="w-full bg-slate-900 text-white text-lg py-2 px-4">
                 Accelerated Computing Online
             </div>
-            <div className="bg-slate-900">
-                <a href="https://github.com/tfsingh/aconline">
-                    <Image src={githubLogo} height={50} width={50} alt="github" />
-                </a>
-            </div>
+
             {!session?.user?.name ? (
                 <button
                     onClick={() => signIn()}
                     type="button"
-                    className="border-2 border-emerald-500 btn btn-primary bg-slate-900 text-white py-1 px-4 w-5/12 text-base rounded"
+                    className="btn btn-primary bg-emerald-500 text-white w-5/12 text-base"
                 >
                     Sign In
                 </button>
             ) : (
                 <div className="flex flex-row w-5/12">
                     <select
-                        className="border-2 border-blue-500 text-center text-white py-1 px-4 w-5/12 text-base bg-slate-900 rounded-l"
+                        className="bg-blue-500 text-center text-white py-1 px-4 w-5/12 text-base "
                         onChange={(e) => setSelectedLanguage(e.target.value)}
                         value={selectedLanguage}
                     >
@@ -45,7 +41,7 @@ const Header: React.FC<HeaderProps> = ({
                         <option value="cuda">CUDA</option>
                     </select>
                     <button
-                        className="border-2 border-emerald-500 bg-slate-900 text-white w-1/3 py-1 px-4 text-base"
+                        className="bg-emerald-500 text-white w-1/3 py-1 px-4 text-base"
                         onClick={sendFunction}
                     >
                         Run Kernel
@@ -53,12 +49,18 @@ const Header: React.FC<HeaderProps> = ({
                     <button
                         onClick={() => signOut()}
                         type="button"
-                        className="border-2 border-red-500 btn btn-primary text-white w-1/3 py-1 px-4 text-base bg-slate-900 rounded-r"
+                        className="bg-red-500 btn btn-primary text-white w-1/3 py-1 px-4 text-base "
                     >
                         Sign Out
                     </button>
                 </div>
             )}
+            <div className="bg-gray-950">
+                <a href="https://github.com/tfsingh/aconline">
+                    <Image src={githubLogo} height={53} width={53} alt="github" />
+                </a>
+            </div>
+
         </div>
     );
 };
