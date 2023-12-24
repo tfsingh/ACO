@@ -33,7 +33,7 @@ const Header: React.FC<HeaderProps> = ({
             ) : (
                 <div className="flex flex-row w-5/12">
                     <select
-                        className="bg-blue-500 text-center text-white py-1 px-4 w-5/12 text-base "
+                        className="bg-blue-500 text-center text-white py-1 px-4 w-5/12 text-base outline-none"
                         onChange={(e) => setSelectedLanguage(e.target.value)}
                         value={selectedLanguage}
                     >
