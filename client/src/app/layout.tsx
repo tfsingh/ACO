@@ -7,7 +7,7 @@ const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
   title: 'ACO',
-  description: 'Accelerated Computing, Online',
+  description: 'An online environment for executing small Triton/CUDA kernels.',
 }
 
 export default function RootLayout({

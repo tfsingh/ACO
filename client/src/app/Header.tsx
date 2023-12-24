@@ -19,7 +19,7 @@ const Header: React.FC<HeaderProps> = ({
     return (
         <div className="flex flex-row">
             <div className="w-full bg-slate-900 text-white text-lg py-2 px-4">
-                Accelerated Computing, Online
+                Accelerated Computing Online
             </div>
             <div className="bg-slate-900">
                 <a href="https://github.com/tfsingh/aconline">
