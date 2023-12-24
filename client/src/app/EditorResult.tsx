@@ -25,7 +25,7 @@ const Header: React.FC<EditorResultProps> = ({
             <div>
                 <Editor
                     height="100vh"
-                    width="69.07vw"
+                    width="66.66vw"
                     language={selectedLanguage === 'cuda' ? 'cpp' : 'python'}
                     value={selectedLanguage === 'cuda' ? cudaCode : tritonCode}
                     theme="vs-dark"
