@@ -64,7 +64,7 @@ const Header: React.FC<HeaderProps> = ({
                         Sign Out
                     </button>
                     <div className="bg-gray-950 w-1/12 flex items-center justify-center">
-                        <a href="https://github.com/tfsingh/aconline">
+                        <a href="https://github.com/tfsingh/aco">
                             <Image src={githubLogo} height={53} width={50} alt="github" />
                         </a>
                     </div>
