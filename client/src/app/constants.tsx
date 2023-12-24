@@ -134,4 +134,4 @@ export const defaultCudaResultWhenReady = "[0, 3, 6, 9, 12]"
 
 export const defaultTritonResult = `tensor([1.3713, 1.3076, 0.4940,  ..., 0.4024, 1.7918, 1.0686], device='cuda:0')
 tensor([1.3713, 1.3076, 0.4940,  ..., 0.4024, 1.7918, 1.0686], device='cuda:0')
-The maximum difference between torch and triton is 0.0\n\nKernel execution completed in 14.26 seconds`
+The maximum difference between torch and triton is 0.0\n\nRequest executed in 14.26 seconds`
