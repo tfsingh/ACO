@@ -49,7 +49,7 @@ const Header: React.FC<HeaderProps> = ({
                     <button
                         onClick={() => signOut()}
                         type="button"
-                        className="bg-red-500 btn btn-primary text-white w-1/3 py-1 px-4 text-base "
+                        className="bg-red-500 btn btn-primary text-white w-1/3 py-1 px-4 text-base"
                     >
                         Sign Out
                     </button>
@@ -57,7 +57,7 @@ const Header: React.FC<HeaderProps> = ({
             )}
             <div className="bg-gray-950">
                 <a href="https://github.com/tfsingh/aconline">
-                    <Image src={githubLogo} height={53} width={53} alt="github" />
+                    <Image src={githubLogo} height={53} width={53} alt="github"/>
                 </a>
             </div>
 
