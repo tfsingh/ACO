@@ -57,7 +57,7 @@ const Header: React.FC<HeaderProps> = ({
             )}
             <div className="bg-gray-950">
                 <a href="https://github.com/tfsingh/aconline">
-                    <Image src={githubLogo} height={53} width={53} alt="github"/>
+                    <Image src={githubLogo} height={53} width={53} alt="github" />
                 </a>
             </div>
 
