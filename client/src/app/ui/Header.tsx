@@ -34,7 +34,7 @@ const Header: React.FC<HeaderProps> = ({
                     </button>
                     <div className="bg-gray-950 w-1/12">
                         <a href="https://github.com/tfsingh/aconline">
-                            <Image src="/github-logo.png" height={53} width={50} alt="github" />
+                            <Image src="/github-logo.png" height={50} width={50} alt="github" />
                         </a>
                     </div>
                 </div>
@@ -64,7 +64,7 @@ const Header: React.FC<HeaderProps> = ({
                     </button>
                     <div className="bg-gray-950 w-1/12 flex items-center justify-center">
                         <a href="https://github.com/tfsingh/aco">
-                            <Image src={"/github-logo.png"} height={53} width={50} alt="github" />
+                            <Image src={"/github-logo.png"} height={50} width={50} alt="github" />
                         </a>
                     </div>
                 </div>
