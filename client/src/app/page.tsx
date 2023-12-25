@@ -1,11 +1,11 @@
 "use client";
 import React, { useRef, useEffect } from 'react';
-import { defaultCuda, defaultTriton, defaultLanguage, defaultCudaResult, defaultTritonResult } from "./constants";
+import { defaultCuda, defaultTriton, defaultLanguage, defaultCudaResult, defaultTritonResult } from "./core/constants";
 import { useSession } from "next-auth/react";
-import useLocalStorageState from "./LocalStorageState";
-import Header from "./Header";
-import EditorResult from "./EditorResult"
-import { sendTriton } from "./KernelExecution"
+import useLocalStorageState from "./core/LocalStorageState";
+import Header from "./ui/Header";
+import EditorResult from "./ui/EditorResult"
+import { sendTriton } from "./core/KernelExecution"
 
 export default function App() {
   const { data: session } = useSession();
