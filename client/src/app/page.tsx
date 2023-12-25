@@ -18,7 +18,7 @@ export default function App() {
 
   const editorRef = useRef<any>(null);
 
-  function handleEditorDidMount(editor: any, monaco: any) {
+  function handleEditorDidMount(editor: any) {
     editorRef.current = editor;
   }
 
@@ -45,7 +45,7 @@ export default function App() {
       }
       const userEmail = session?.user?.email;
       if (userEmail) {
-        let startTime: any;
+        let startTime: number;
         let intervalId;
 
         const updateElapsedTime = () => {
