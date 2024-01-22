@@ -65,7 +65,8 @@ int main() {
 }
 `;
 
-export const defaultTriton = `import torch
+export const defaultTriton = `# Here's some Triton to get you started!
+import torch
 import triton
 import triton.language as tl
 

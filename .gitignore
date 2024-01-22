@@ -36,6 +36,7 @@ client/next-env.d.ts
 
 # server
 server/__pycache__
+server/test.py
 
 # ds store
 **/.DS_Store
