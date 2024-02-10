@@ -1,17 +1,20 @@
 # Accelerated Computing Online
 
 ### Summary
+
 ACO is an online environment for GPU-accelerated computing, providing an alternative to Colab for learning Triton/Numba/CUDA and testing small kernels.
 
 ### Environment
+
 The following packages are included in the Triton/Numba environment:
+
 - Triton
 - Numba
 - PyTorch
 - Numpy
 - Pandas
 
-Every request is executed serverlessly on a NVIDIA T4 GPU, with a kernel execution limit of 10s (does not include network/cold start times). We rate-limit users to 30 requests every 24 hours; we'll be monitoring traffic as time goes on and will hopefully be able to increase this limit accordingly. As of current, code/execution results are stored locally.
+Every request is executed serverlessly on a NVIDIA T4 GPU, with a kernel execution limit of 20s (does not include network/cold start times). We rate-limit users to 30 requests every 24 hours; we'll be monitoring traffic as time goes on and will hopefully be able to increase this limit accordingly. As of current, code/execution results are stored locally.
 
 ### FAQs
 

@@ -56,7 +56,3 @@ async def execute_kernel(item: Dict, token: HTTPAuthorizationCredentials = Depen
 
     except Exception as e:
         print(f"An error occurred: {e}")
-
-@stub.local_entrypoint()
-def main():
-    execute_kernel.remote()
