@@ -31,7 +31,7 @@ export async function sendTriton(editorRef: any, email: string) {
             throw new Error('Failed to send Triton request');
         }
 
-        return await response.text();
+        return await response.json();
     } catch (error) {
         return "Error executing request";
     }

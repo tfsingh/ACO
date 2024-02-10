@@ -5,11 +5,10 @@ import (
     "encoding/json"
     "fmt"
     "io/ioutil"
+    "bytes"
     "net/http"
     "os"
-    "os/exec"
     "strconv"
-    "strings"
     "time"
     "github.com/redis/go-redis/v9"
     //"github.com/joho/godotenv"
@@ -23,10 +22,10 @@ type RequestBody struct {
 }
 
 func rateLimit(email string) error {
-	/*envErr := godotenv.Load()
-	if envErr != nil {
-		return fmt.Errorf("Error loading .env file")
-	}*/
+	// envErr := godotenv.Load()
+	// if envErr != nil {
+	// 	return fmt.Errorf("Error loading .env file")
+	// }
 
 	var ctx = context.Background()
 	redisEndpoint := os.Getenv("REDIS_ENDPOINT")
@@ -78,7 +77,7 @@ func rateLimit(email string) error {
 }
 
 func tritonHandler(w http.ResponseWriter, r *http.Request) {
-    w.Header().Set("Access-Control-Allow-Origin", "https://www.acceleratedcomputingonline.com")
+	w.Header().Set("Access-Control-Allow-Origin", "https://www.acceleratedcomputingonline.com")
 	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
 	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 
@@ -87,74 +86,72 @@ func tritonHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-    body, err := ioutil.ReadAll(r.Body)
-    if err != nil {
-        http.Error(w, "Error reading code from request", http.StatusBadRequest)
-        return
-    }
+	body, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		http.Error(w, "Error reading request body", http.StatusBadRequest)
+		return
+	}
 
-    var requestBody RequestBody
+	var requestBody RequestBody
 	err = json.Unmarshal(body, &requestBody)
 	if err != nil {
 		http.Error(w, "Error decoding JSON", http.StatusBadRequest)
 		return
 	}
 
-    code := requestBody.Code
 	email := requestBody.Email
 
-    err = rateLimit(email)
+	err = rateLimit(email)
 	if err != nil {
-		fmt.Println("Error in rate limiting:", err)
-        fmt.Fprintf(w, "Reached rate limit on requests (resets every 24h).")
+		http.Error(w, "Reached rate limit on requests (resets every 24h).", http.StatusTooManyRequests)
 		return
 	}
 
-    tempFile, err := ioutil.TempFile("", "kernel-*.py")
-    if err != nil {
-        http.Error(w, "Error creating temporary file", http.StatusInternalServerError)
-        return
-    }
-    defer os.Remove(tempFile.Name())
+	modalKey := os.Getenv("MODAL_KEY")
+	endpoint := os.Getenv("MODAL_TRITON_ENDPOINT")
 
-    baseKernel, err := ioutil.ReadFile("base_kernel.py")
-    if err != nil {
-        http.Error(w, "Error reading base_kernel.py", http.StatusInternalServerError)
-        return
-    }
+	payload := struct {
+		Code string `json:"code"`
+	}{
+		Code: requestBody.Code,
+	}
 
-    baseKernelStr := string(baseKernel)
-    codeStr := string(code)
-    codeStr = strings.Replace(codeStr, "\n", "\n        ", -1)
-    baseKernelStr = strings.Replace(baseKernelStr, "# CODE", codeStr, 1)
+	jsonStr, err := json.Marshal(payload)
+	if err != nil {
+		http.Error(w, "Error marshaling JSON", http.StatusInternalServerError)
+		return
+	}
 
-    _, err = tempFile.Write([]byte(baseKernelStr))
-    if err != nil {
-        http.Error(w, "Error writing code to temporary file", http.StatusInternalServerError)
-        return
-    }
+	req, err := http.NewRequest("POST", endpoint, bytes.NewBuffer(jsonStr))
+	if err != nil {
+		http.Error(w, "Error creating request to external service", http.StatusInternalServerError)
+		return
+	}
 
-    /*
-    fileContents, err := ioutil.ReadFile(tempFile.Name())
-    if err != nil {
-        http.Error(w, "Error reading temporary file", http.StatusInternalServerError)
-        return
-    }
-    fmt.Printf("Temporary File Contents:\n%s\n", string(fileContents))
-    */
+	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", modalKey))
+	req.Header.Set("Content-Type", "application/json")
 
-    cmd := exec.Command("modal", "run", "-q", tempFile.Name())
-    output, err := cmd.CombinedOutput()
-    if err != nil {
-        fmt.Fprintf(w, "Error executing Triton command: %s\n", output)
-        return
-    }
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		http.Error(w, "Error making request to modal", http.StatusInternalServerError)
+		return
+	}
+	defer resp.Body.Close()
 
-    outputStr := string(output)
-    substringToRemove := "Stopping app - local entrypoint completed.\n"
-    outputStr = strings.Replace(outputStr, substringToRemove, "", -1)
+	body, err = ioutil.ReadAll(resp.Body)
+	if err != nil {
+		http.Error(w, "Error reading response from modal", http.StatusInternalServerError)
+		return
+	}
 
-    fmt.Fprintf(w, outputStr)
+    var outputStr string
+	str := string(body)
+    if err := json.Unmarshal([]byte(str), &outputStr); err != nil {
+		fmt.Println("Error unmarshalling:", err)
+		return
+	}
+	fmt.Fprintf(w, str)
 }
 
 func cudaHandler(w http.ResponseWriter, r *http.Request) {
